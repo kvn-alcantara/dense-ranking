@@ -1,8 +1,13 @@
 {
-    "name": "laravel/laravel",
+    "name": "kvn-alcantara/dense-ranking",
     "type": "project",
-    "description": "The Laravel Framework.",
-    "keywords": ["framework", "laravel"],
+    "description": "Desafio desenvolvedor pleno Cygni.",
+    "authors": [
+        {
+            "name": "Kevin de Lima Alcantara",
+            "role": "Developer"
+        }
+    ],
     "license": "MIT",
     "require": {
         "php": "^7.3|^8.0",
