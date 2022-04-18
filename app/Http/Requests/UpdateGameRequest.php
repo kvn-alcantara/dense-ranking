@@ -11,7 +11,7 @@ class UpdateGameRequest extends FormRequest
      *
      * @return bool
      */
-    public function authorize()
+    public function authorize(): bool
     {
         return true;
     }
@@ -21,13 +21,10 @@ class UpdateGameRequest extends FormRequest
      *
      * @return array
      */
-    public function rules()
+    public function rules(): array
     {
         return [
-            'description' => 'sometimes|required|string|max:255',
-            'scores' => 'sometimes|required|array|min:1',
-            'scores.*.value' => 'required|numeric',
-            'scores.*.user_id' => 'sometimes|required|numeric|exists:users,id',
+            'name' => 'sometimes|required|string|max:255',
         ];
     }
 }
