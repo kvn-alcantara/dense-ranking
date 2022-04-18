@@ -21,7 +21,7 @@ class AuthTest extends TestCase
             'password' => 'secret',
         ];
 
-        $response = $this->postJson(route('auth.login'), $data);
+        $response = $this->postJson(route('login'), $data);
 
         $response
             ->assertOk()
@@ -38,7 +38,7 @@ class AuthTest extends TestCase
             'password' => $this->faker->password(),
         ];
 
-        $response = $this->postJson(route('auth.login'), $data);
+        $response = $this->postJson(route('login'), $data);
 
         $response->assertUnauthorized();
     }
@@ -52,7 +52,7 @@ class AuthTest extends TestCase
             'password_confirmation' => 'secret',
         ];
 
-        $response = $this->postJson(route('auth.register'), $data);
+        $response = $this->postJson(route('register'), $data);
 
         $response
             ->assertValid()
@@ -69,7 +69,7 @@ class AuthTest extends TestCase
             'password' => 'secret',
         ];
 
-        $response = $this->postJson(route('auth.register'), $data);
+        $response = $this->postJson(route('register'), $data);
 
         $response
             ->assertInvalid(['email', 'password'])
@@ -87,7 +87,7 @@ class AuthTest extends TestCase
             'password_confirmation' => 'secret',
         ];
 
-        $response = $this->postJson(route('auth.register'), $data);
+        $response = $this->postJson(route('register'), $data);
 
         $response
             ->assertInvalid(['email'])
@@ -100,7 +100,7 @@ class AuthTest extends TestCase
             User::factory()->create()
         );
 
-        $response = $this->postJson(route('auth.logout'));
+        $response = $this->postJson(route('logout'));
 
         $response->assertOk();
     }

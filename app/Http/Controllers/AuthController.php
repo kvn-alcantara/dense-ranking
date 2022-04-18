@@ -32,6 +32,8 @@ class AuthController extends Controller
     {
         $user = User::create($request->validated());
 
+        // attach with playerole
+
         $token = $user->createToken('api-token')->plainTextToken;
 
         return $this->respondWithToken($token);
