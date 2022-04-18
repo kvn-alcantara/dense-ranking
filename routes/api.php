@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\GameController;
+use App\Http\Controllers\ScoreController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -15,9 +16,9 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::apiResources([
-    'games' => GameController::class,
-]);
+Route::apiResource('games', GameController::class);
+
+Route::apiResource('scores', ScoreController::class)->except(['update']);
 
 Route::controller(AuthController::class)->group(function () {
     Route::post('login', 'login')->name('login');

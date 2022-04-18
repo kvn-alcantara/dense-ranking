@@ -4,11 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\LoginUserRequest;
 use App\Http\Requests\RegisterUserRequest;
+use App\Models\Role;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Symfony\Component\HttpFoundation\Response;
+use Throwable;
 
 class AuthController extends Controller
 {
@@ -27,14 +30,17 @@ class AuthController extends Controller
      *
      * @param RegisterUserRequest $request
      * @return JsonResponse
+     * @throws Throwable
      */
     public function register(RegisterUserRequest $request): JsonResponse
     {
-        $user = User::create($request->validated());
+        $token = DB::transaction(function () use ($request) {
+            $user = User::create($request->validated());
 
-        // attach with playerole
+            $user->roles()->attach(Role::PLAYER);
 
-        $token = $user->createToken('api-token')->plainTextToken;
+            return $user->createToken('api-token')->plainTextToken;
+        });
 
         return $this->respondWithToken($token);
     }

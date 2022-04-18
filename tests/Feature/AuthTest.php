@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\Role;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -14,7 +15,7 @@ class AuthTest extends TestCase
 
     public function test_can_login_with_correct_credentials()
     {
-        $user = User::factory()->create();
+        $user = User::factory()->has(Role::factory()->player())->create();
 
         $data = [
             'email' => $user->email,
@@ -45,6 +46,9 @@ class AuthTest extends TestCase
 
     public function test_it_register_a_new_user_with_valid_fields()
     {
+        Role::factory()->admin()->create();
+        Role::factory()->player()->create();
+
         $data = [
             'name' => $this->faker->name(),
             'email' => $this->faker->email(),
@@ -76,7 +80,7 @@ class AuthTest extends TestCase
             ->assertUnprocessable();
     }
 
-    public function test_cannot_register_a_user_with_the_same_email()
+    public function test_cannot_register_a_user_with_existing_email()
     {
         $user = User::factory()->create();
 
