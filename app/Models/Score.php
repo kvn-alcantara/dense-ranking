@@ -3,26 +3,27 @@
 namespace App\Models;
 
 use Eloquent;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
 
 /**
- * App\Models\Game
+ * App\Models\Score
  *
  * @property int $id
- * @property string $name
+ * @property int $game_id
+ * @property int $user_id
+ * @property int $value
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property Carbon|null $deleted_at
- * @property-read Collection|Score[] $scores
- * @property-read int|null $scores_count
+ * @property-read Game $game
+ * @property-read User $user
  * @mixin Eloquent
  */
-class Game extends Model
+class Score extends Model
 {
     use HasFactory, SoftDeletes;
 
@@ -32,14 +33,24 @@ class Game extends Model
      * @var array
      */
     protected $fillable = [
-        'name',
+        'game_id',
+        'user_id',
+        'value',
     ];
 
     /**
-     * Get the scores for the game.
+     * Get the game that owns the score.
      */
-    public function scores(): HasMany
+    public function game(): BelongsTo
     {
-        return $this->hasMany(Score::class);
+        return $this->belongsTo(Game::class);
+    }
+
+    /**
+     * Get the user that owns the score.
+     */
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
     }
 }
