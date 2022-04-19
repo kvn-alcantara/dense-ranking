@@ -2,10 +2,8 @@
 
 namespace App\Providers;
 
-use App\Models\Game;
-use App\Models\Score;
-use App\Observers\GameObserver;
-use App\Observers\ScoreObserver;
+use App\Events\ScoreCreated;
+use App\Listeners\AdjustGameRanking;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
@@ -22,6 +20,9 @@ class EventServiceProvider extends ServiceProvider
         Registered::class => [
             SendEmailVerificationNotification::class,
         ],
+        ScoreCreated::class => [
+            AdjustGameRanking::class,
+        ],
     ];
 
     /**
@@ -31,7 +32,6 @@ class EventServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        Game::observe(GameObserver::class);
-        Score::observe(ScoreObserver::class);
+        //
     }
 }

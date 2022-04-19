@@ -11,9 +11,9 @@ class StoreScoreRequest extends FormRequest
      *
      * @return bool
      */
-    public function authorize()
+    public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -21,10 +21,12 @@ class StoreScoreRequest extends FormRequest
      *
      * @return array
      */
-    public function rules()
+    public function rules(): array
     {
         return [
-            //
+            'game_id' => 'required|numeric|exists:games,id',
+            'user_id' => 'sometimes|required|numeric|exists:users,id',
+            'value' => 'required|integer|gte:0',
         ];
     }
 }

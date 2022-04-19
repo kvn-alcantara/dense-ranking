@@ -2,11 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\ScoreCreated;
 use App\Http\Requests\StoreScoreRequest;
-use App\Http\Requests\UpdateScoreRequest;
 use App\Http\Resources\ScoreCollection;
 use App\Http\Resources\ScoreResource;
-use App\Models\Game;
 use App\Models\Score;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -28,7 +27,7 @@ class ScoreController extends Controller
      *
      * @return ScoreCollection
      */
-    public function index()
+    public function index(): ScoreCollection
     {
         $scores = Score::paginate();
 
@@ -44,6 +43,8 @@ class ScoreController extends Controller
     public function store(StoreScoreRequest $request): ScoreResource
     {
         $score = auth()->user()->scores()->create($request->validated());
+
+        ScoreCreated::dispatch($score);
 
         return new ScoreResource($score);
     }

@@ -21,17 +21,18 @@ class GameTest extends TestCase
         'name',
         'scores' => [
             '*' => [
+                'position',
+                'value',
                 'user' => [
                     'id',
                     'name',
                 ],
-                'value',
                 'created_at',
             ],
         ],
     ];
 
-    public function test_it_gets_all_games()
+    public function test_it_gets_games()
     {
         $this->signIn();
 
@@ -52,15 +53,21 @@ class GameTest extends TestCase
             ]);
     }
 
+    public function test_calling_games_gets_an_error_if_unauthenticated() {
+        $response = $this->getJson(route('games.index'));
+
+        $response->assertUnauthorized();
+    }
+
     public function test_it_gets_a_specific_game()
     {
         $user = $this->signIn();
 
         $game = Game::factory()
-            ->has(Score::factory()->for($user))
+            ->has(Score::factory()->for($user)->count(15))
             ->create();
 
-        $response = $this->getJson(route('games.show', $game));
+        $response = $this->getJson(route('games.show', $game))->dump();
 
         $response
             ->assertOk()
@@ -69,19 +76,47 @@ class GameTest extends TestCase
             ]);
     }
 
-    public function test_it_creates_a_game()
+    public function test_calling_specific_game_gets_an_error_if_unauthenticated()
     {
-        $user = User::factory()->has(Role::factory()->admin())->create();
+        $user = User::factory()->has(Role::factory()->player())->create();
 
-        $this->signIn($user);
+        $game = Game::factory()
+            ->has(Score::factory()->for($user)->count(15))
+            ->create();
 
+        $response = $this->getJson(route('games.show', $game));
+
+        $response->assertUnauthorized();
+    }
+
+    public function test_it_creates_a_game_with_valid_fields()
+    {
+        $admin = User::factory()->has(Role::factory()->admin())->create();
         $player = User::factory()->has(Role::factory()->player())->create();
+
+        $this->signIn($admin);
 
         $data = [
             'name' => $this->faker->sentence(),
             'scores' => [
                 [
-                    'value' => $this->faker->numberBetween(0,100),
+                    'value' => 5,
+                    'user_id' => $player->id,
+                ],
+                [
+                    'value' => 10,
+                    'user_id' => $player->id,
+                ],
+                [
+                    'value' => 10,
+                    'user_id' => $player->id,
+                ],
+                [
+                    'value' => 15,
+                    'user_id' => $player->id,
+                ],
+                [
+                    'value' => 9,
                     'user_id' => $player->id,
                 ],
             ]
@@ -93,6 +128,58 @@ class GameTest extends TestCase
             ->assertCreated()
             ->assertJsonStructure([
                 'data' => $this->gameWithScoresJsonStructure,
+            ]);
+    }
+
+    public function test_creating_game_gets_an_error_if_fields_are_invalid()
+    {
+        $admin = User::factory()->has(Role::factory()->admin())->create();
+
+        $this->signIn($admin);
+
+        $data = [
+            'name' => $this->faker->sentence(),
+            'scores' => [
+                [
+                    'value' => 'lol',
+                    'user_id' => 0,
+                ],
+            ]
+        ];
+
+        $response = $this->postJson(route('games.store'), $data)->dump();
+
+        $response
+            ->assertInvalid(['scores.0.value', 'scores.0.user_id'])
+            ->assertUnprocessable();
+    }
+
+    public function test_creating_game_gets_an_error_if_unauthenticated()
+    {
+        $response = $this->postJson(route('games.store'), []);
+
+        $response->assertUnauthorized();
+    }
+
+    public function test_it_updates_a_game_with_valid_fields()
+    {
+        $admin = User::factory()->has(Role::factory()->admin())->create();
+
+        $this->signIn($admin);
+
+        $game = Game::factory()->create();
+
+        $data = [
+            'name' => 'Test',
+        ];
+
+        $response = $this->putJson(route('games.update', $game), $data);
+
+        $response
+            ->assertValid()
+            ->assertOk()
+            ->assertJsonStructure([
+                'data' => $this->gameWithScoresJsonStructure
             ]);
     }
 }

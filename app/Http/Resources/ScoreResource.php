@@ -22,6 +22,7 @@ class ScoreResource extends JsonResource
                 'name' => $this->user->name,
             ],
             'value' => $this->value,
+            'position' => $this->position,
             'created_at' => $this->created_at->format('d/m/Y H:i:s'),
             '_links' => [
                 $this->mergeWhen(auth()->id() === $this->user_id, [

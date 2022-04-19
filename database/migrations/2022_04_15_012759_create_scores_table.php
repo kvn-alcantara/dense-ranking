@@ -18,7 +18,7 @@ class CreateScoresTable extends Migration
             $table->foreignId('game_id')->constrained()->cascadeOnDelete();
             $table->foreignId('user_id')->nullable()->constrained()->cascadeOnDelete();
             $table->unsignedBigInteger('value');
-            $table->unsignedBigInteger('position');
+            $table->unsignedBigInteger('position')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });
