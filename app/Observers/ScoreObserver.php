@@ -15,6 +15,26 @@ class ScoreObserver
      */
     public function created(Score $score)
     {
+        // Get the existing score with a value higher or equal than the new one
+        $existingScore = Score::where('game_id', $score->game_id)
+            ->where('value', '>=', $score->value)
+            ->orderBy('value')
+            ->limit(1)
+            ->get();
+
+        if (is_null($existingScore)) {
+            $score->position = 1;
+        } elseif ($existingScore->value === $score->value) {
+            $score->position = $existingScore->position;
+        } elseif ($existingScore->value > $score->value) {
+            $score->position = $existingScore->position + 1;
+
+            // Increases the position of the lowest value scores
+            Score::where('game_id', $score->game_id)
+                ->where('value', '<', $score->value)
+                ->increment('position');
+        }
+
         Cache::forget("score-$score->id");
     }
 
