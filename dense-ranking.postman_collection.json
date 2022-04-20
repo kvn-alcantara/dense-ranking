@@ -160,7 +160,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"name\": \"New Game\",\r\n    \"scores\": [\r\n        {\r\n            \"value\": 10,\r\n            \"user_id\": 1\r\n        },\r\n        {\r\n            \"value\": 10,\r\n            \"user_id\": 1\r\n        },\r\n        {\r\n            \"value\": 5,\r\n            \"user_id\": 1\r\n        },\r\n        {\r\n            \"value\": 9,\r\n            \"user_id\": 1\r\n        }\r\n    ]\r\n}",
+							"raw": "{\r\n    \"name\": \"New Game\",\r\n    \"scores\": [\r\n        {\r\n            \"value\": 10,\r\n            \"user_id\": 12\r\n        },\r\n        {\r\n            \"value\": 10,\r\n            \"user_id\": 8\r\n        },\r\n        {\r\n            \"value\": 5,\r\n            \"user_id\": 2\r\n        },\r\n        {\r\n            \"value\": 9,\r\n            \"user_id\": 11\r\n        }\r\n    ]\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -303,7 +303,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"user_id\": 17,\r\n    \"value\": 10\r\n}",
+							"raw": "{\r\n    \"user_id\": 17,\r\n    \"value\": 18\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -337,7 +337,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"name\": \"New Game Plus\"\r\n}",
+							"raw": "{\r\n    \"value\": 18\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -369,12 +369,12 @@
 							}
 						],
 						"url": {
-							"raw": "{{base_url}}/games/1",
+							"raw": "{{base_url}}/scores/1",
 							"host": [
 								"{{base_url}}"
 							],
 							"path": [
-								"games",
+								"scores",
 								"1"
 							]
 						}
@@ -389,7 +389,7 @@
 		"bearer": [
 			{
 				"key": "token",
-				"value": "1|X17uuJseeG0tJmxWwkibXsNDiaPsU4y7qIx2237a",
+				"value": "2|CGaNgytwnqJsqNKHCLjdi6QwpEUiwfetZclmBgvg",
 				"type": "string"
 			}
 		]

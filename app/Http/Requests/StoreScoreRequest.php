@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Role;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreScoreRequest extends FormRequest
@@ -13,7 +14,7 @@ class StoreScoreRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return $this->user_id == auth()->id();
+        return $this->user_id == auth()->id() || $this->user()->hasRoles([Role::ADMIN]);
     }
 
     /**
