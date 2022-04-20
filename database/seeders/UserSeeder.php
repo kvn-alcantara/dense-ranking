@@ -15,17 +15,15 @@ class UserSeeder extends Seeder
      */
     public function run()
     {
+        Role::factory()
+            ->admin()
+            ->create();
+
         $user = User::create([
             'name' => 'Kevin Alcantara',
             'email' => 'kevin@gmail.com',
             'password' => 'secret',
         ]);
-
         $user->roles()->attach(Role::ADMIN);
-
-//        User::factory()
-//            ->count(10)
-//            ->hasScores(10)
-//            ->create();
     }
 }

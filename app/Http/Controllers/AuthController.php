@@ -34,15 +34,17 @@ class AuthController extends Controller
      */
     public function register(RegisterUserRequest $request): JsonResponse
     {
-        $token = DB::transaction(function () use ($request) {
+        $user = DB::transaction(function () use ($request) {
             $user = User::create($request->validated());
 
             $user->roles()->attach(Role::PLAYER);
 
-            return $user->createToken('api-token')->plainTextToken;
+            return $user;
         });
 
-        return $this->respondWithToken($token);
+        $token = $user->createToken('api-token')->plainTextToken;
+
+        return $this->respondWithToken($token, $user);
     }
 
     /**
@@ -65,7 +67,7 @@ class AuthController extends Controller
 
         $token = $user->createToken('api-token')->plainTextToken;
 
-        return $this->respondWithToken($token);
+        return $this->respondWithToken($token, $user);
     }
 
     /**
@@ -86,13 +88,25 @@ class AuthController extends Controller
      * Get the token array structure.
      *
      * @param string $token
+     * @param User $user
      * @return JsonResponse
      */
-    protected function respondWithToken(string $token): JsonResponse
+    protected function respondWithToken(string $token, User $user): JsonResponse
     {
+        $roles = [];
+
+        foreach ($user->roles as $role) {
+            $roles[] = $role->name;
+        }
+
         return response()->json([
             'access_token' => $token,
             'token_type' => 'Bearer',
+            'user' => [
+                'id' => $user->id,
+                'name' => $user->name,
+                'roles' => $roles,
+            ],
         ]);
     }
 }

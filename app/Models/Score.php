@@ -48,7 +48,8 @@ class Score extends Model
     protected static function booted()
     {
         static::addGlobalScope('ordered-by-position', function (Builder $builder) {
-            $builder->orderBy('position');
+            $builder->orderBy('position')
+                    ->orderBy('created_at');
         });
     }
 

@@ -23,8 +23,13 @@ class GameResource extends JsonResource
             '_links' => [
                 [
                     'href' => route('games.scores.index', $this),
-                    'rel' => 'scores',
+                    'rel' => 'scores.index',
                     'type' => 'GET',
+                ],
+                [
+                    'href' => route('games.scores.store', $this),
+                    'rel' => 'store',
+                    'type' => 'POST',
                 ],
                 $this->mergeWhen(auth()->user()->hasRoles([Role::ADMIN]), [
                     [
