@@ -36,6 +36,15 @@ class Game extends Model
     ];
 
     /**
+     * The relationships that should always be loaded.
+     *
+     * @var array
+     */
+    protected $with = [
+        'scores',
+    ];
+
+    /**
      * Get the scores for the game.
      */
     public function scores(): HasMany

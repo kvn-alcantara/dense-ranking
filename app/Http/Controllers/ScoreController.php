@@ -31,8 +31,6 @@ class ScoreController extends Controller
      */
     public function index(Game $game): ScoreCollection
     {
-        $game->loadMissing('scores.user');
-
         $scores = $game->scores()->paginate();
 
         return new ScoreCollection($scores);
@@ -73,8 +71,6 @@ class ScoreController extends Controller
     public function update(UpdateScoreRequest $request, Score $score): ScoreResource
     {
         $score->update($request->validated());
-
-        $score->loadMissing('game');
 
         return new ScoreResource($score);
     }

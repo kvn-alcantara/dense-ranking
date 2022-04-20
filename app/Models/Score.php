@@ -41,6 +41,15 @@ class Score extends Model
     ];
 
     /**
+     * The relationships that should always be loaded.
+     *
+     * @var array
+     */
+    protected $with = [
+        'user',
+    ];
+
+    /**
      * The "booted" method of the model.
      *
      * @return void
