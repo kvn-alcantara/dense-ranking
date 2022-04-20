@@ -34,7 +34,7 @@ class ScoreTest extends TestCase
 
         $game = Game::factory()->has(Score::factory()->count(5))->create();
 
-        $response = $this->getJson(route('games.scores.index', $game))->dump();
+        $response = $this->getJson(route('games.scores.index', $game));
 
         $response
             ->assertOk()
@@ -101,6 +101,8 @@ class ScoreTest extends TestCase
 
     public function test_creating_score_gets_an_error_if_fields_are_invalid()
     {
+        $this->signIn();
+
         $game = Game::factory()->create();
 
         $data = [
