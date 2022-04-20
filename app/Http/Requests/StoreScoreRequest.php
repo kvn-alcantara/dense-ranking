@@ -13,7 +13,7 @@ class StoreScoreRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return true;
+        return $this->user_id == auth()->id();
     }
 
     /**

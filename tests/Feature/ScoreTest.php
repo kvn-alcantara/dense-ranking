@@ -101,19 +101,19 @@ class ScoreTest extends TestCase
 
     public function test_creating_score_gets_an_error_if_fields_are_invalid()
     {
-        $this->signIn();
+        $user = $this->signIn();
 
         $game = Game::factory()->create();
 
         $data = [
-            'user_id' => 0,
+            'user_id' => $user->id,
             'value' => '-1',
         ];
 
         $response = $this->postJson(route('games.scores.store', $game), $data);
 
         $response
-            ->assertInvalid(['value', 'user_id'])
+            ->assertInvalid(['value'])
             ->assertUnprocessable();
     }
 
@@ -124,6 +124,24 @@ class ScoreTest extends TestCase
         $response = $this->postJson(route('games.scores.store', $game), []);
 
         $response->assertUnauthorized();
+    }
+
+    public function test_creating_score_gets_an_error_if_not_same_user()
+    {
+        $this->signIn();
+
+        $player2 = User::factory()->has(Role::factory()->player())->create();
+
+        $game = Game::factory()->create();
+
+        $data = [
+            'user_id' => $player2->id,
+            'value' => rand(1, 10),
+        ];
+
+        $response = $this->postJson(route('games.scores.store', $game), $data);
+
+        $response->assertForbidden();
     }
 
     public function test_admin_can_update_a_score_with_valid_fields()
