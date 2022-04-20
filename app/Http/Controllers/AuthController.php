@@ -26,7 +26,7 @@ class AuthController extends Controller
     }
 
     /**
-     * Register a new user and get a JWT.
+     * Register a new user and get a token.
      *
      * @param RegisterUserRequest $request
      * @return JsonResponse
@@ -48,7 +48,7 @@ class AuthController extends Controller
     }
 
     /**
-     * Get a JWT via given credentials.
+     * Get a token via given credentials.
      *
      * @param LoginUserRequest $request
      * @return JsonResponse
