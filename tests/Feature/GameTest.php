@@ -182,4 +182,73 @@ class GameTest extends TestCase
                 'data' => $this->gameWithScoresJsonStructure
             ]);
     }
+
+    public function test_updating_a_game_gets_an_error_if_fields_are_invalid()
+    {
+        $admin = User::factory()->has(Role::factory()->admin())->create();
+
+        $this->signIn($admin);
+
+        $game = Game::factory()->create();
+
+        $data = [
+            'name' => [
+                'Test' => 1,
+            ],
+        ];
+
+        $response = $this->putJson(route('games.update', $game), $data)->dump();
+
+        $response
+            ->assertInvalid(['name'])
+            ->assertUnprocessable();
+    }
+
+    public function test_updating_a_game_gets_an_error_if_unauthenticated()
+    {
+        $game = Game::factory()->create();
+
+        $response = $this->putJson(route('games.update', $game), []);
+
+        $response->assertUnauthorized();
+    }
+
+    public function test_it_deletes_a_game()
+    {
+        $admin = User::factory()->has(Role::factory()->admin())->create();
+
+        $this->signIn($admin);
+
+        $game = Game::factory()->create();
+
+        $response = $this->deleteJson(route('games.destroy', $game));
+
+        $response->assertNoContent();
+
+        $this->assertSoftDeleted($game);
+    }
+
+    public function test_calling_game_gets_an_error_if_deleted()
+    {
+        $admin = User::factory()->has(Role::factory()->admin())->create();
+
+        $this->signIn($admin);
+
+        $game = Game::factory()->create();
+
+        $game->delete();
+
+        $response = $this->getJson(route('games.show', $game));
+
+        $response->assertNotFound();
+    }
+
+    public function test_delete_game_gets_an_error_if_unauthenticated()
+    {
+        $game = Game::factory()->create();
+
+        $response = $this->deleteJson(route('games.destroy', $game));
+
+        $response->assertUnauthorized();
+    }
 }
