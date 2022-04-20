@@ -2,6 +2,7 @@
 
 namespace App\Policies;
 
+use App\Models\Role;
 use App\Models\Score;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
@@ -18,7 +19,7 @@ class ScorePolicy
      */
     public function before(User $user)
     {
-        if ($user->hasRoles(['admin'])) {
+        if ($user->hasRoles([Role::ADMIN])) {
             return true;
         }
     }
@@ -51,19 +52,17 @@ class ScorePolicy
      */
     public function create(User $user): bool
     {
-        return $user->hasRoles(['player']);
+        return $user->hasRoles([Role::PLAYER]);
     }
 
     /**
      * Determine whether the user can update the model.
      *
-     * @param User $user
-     * @param Score $score
      * @return bool
      */
-    public function update(User $user, Score $score): bool
+    public function update(): bool
     {
-        return $user->id === $score->user_id;
+        return false;
     }
 
     /**
@@ -75,7 +74,7 @@ class ScorePolicy
      */
     public function delete(User $user, Score $score): bool
     {
-        return $user->id === $score->user_id;
+        return $user->id == $score->user_id;
     }
 
     /**

@@ -18,7 +18,7 @@ class ScoreFactory extends Factory
         return [
             'game_id' => Game::factory(),
             'user_id' => User::factory(),
-            'value' => $this->faker->numberBetween(1, 1000),
+            'value' => $this->faker->numberBetween(1, 10),
         ];
     }
 }

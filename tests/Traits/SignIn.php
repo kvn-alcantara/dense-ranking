@@ -19,6 +19,7 @@ trait SignIn
     public function signIn($user = null)
     {
         if (is_null($user)) {
+            Role::factory()->admin()->create();
             $user = User::factory()->has(Role::factory()->player())->create();
         }
 

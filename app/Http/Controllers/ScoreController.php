@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Events\ScoreCreated;
 use App\Http\Requests\StoreScoreRequest;
+use App\Http\Requests\UpdateScoreRequest;
 use App\Http\Resources\ScoreCollection;
 use App\Http\Resources\ScoreResource;
+use App\Models\Game;
 use App\Models\Score;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -25,11 +26,14 @@ class ScoreController extends Controller
     /**
      * Display a listing of the resource.
      *
+     * @param Game $game
      * @return ScoreCollection
      */
-    public function index(): ScoreCollection
+    public function index(Game $game): ScoreCollection
     {
-        $scores = Score::paginate();
+        $game->loadMissing('scores.user');
+
+        $scores = $game->scores()->paginate();
 
         return new ScoreCollection($scores);
     }
@@ -37,14 +41,13 @@ class ScoreController extends Controller
     /**
      * Store a newly created resource in storage.
      *
+     * @param Game $game
      * @param StoreScoreRequest $request
      * @return ScoreResource
      */
-    public function store(StoreScoreRequest $request): ScoreResource
+    public function store(Game $game, StoreScoreRequest $request): ScoreResource
     {
-        $score = auth()->user()->scores()->create($request->validated());
-
-        ScoreCreated::dispatch($score);
+        $score = $game->scores()->create($request->validated());
 
         return new ScoreResource($score);
     }
@@ -57,6 +60,22 @@ class ScoreController extends Controller
      */
     public function show(Score $score): ScoreResource
     {
+        return new ScoreResource($score);
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param UpdateScoreRequest $request
+     * @param Score $score
+     * @return ScoreResource
+     */
+    public function update(UpdateScoreRequest $request, Score $score): ScoreResource
+    {
+        $score->update($request->validated());
+
+        $score->loadMissing('game');
+
         return new ScoreResource($score);
     }
 

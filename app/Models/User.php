@@ -117,8 +117,7 @@ class User extends Authenticatable
     {
         foreach ($this->roles as $userRole) {
             foreach ($roles as $role) {
-                if ($userRole->name == $role)
-                {
+                if ($userRole->id == $role) {
                     return true;
                 }
             }

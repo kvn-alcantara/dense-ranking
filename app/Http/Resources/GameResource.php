@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Models\Role;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -21,11 +22,11 @@ class GameResource extends JsonResource
             'scores' => ScoreResource::collection($this->whenLoaded('scores')),
             '_links' => [
                 [
-                    'href' => route('scores.index', $this),
-                    'rel' => 'ranking',
+                    'href' => route('games.scores.index', $this),
+                    'rel' => 'scores',
                     'type' => 'GET',
                 ],
-                $this->mergeWhen(auth()->user()->hasRoles(['admin']), [
+                $this->mergeWhen(auth()->user()->hasRoles([Role::ADMIN]), [
                     [
                         'href' => route('games.update', $this),
                         'rel' => 'update',

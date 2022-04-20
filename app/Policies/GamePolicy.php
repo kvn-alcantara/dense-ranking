@@ -2,6 +2,7 @@
 
 namespace App\Policies;
 
+use App\Models\Role;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 use Illuminate\Auth\Access\Response;
@@ -18,7 +19,7 @@ class GamePolicy
      */
     public function before(User $user)
     {
-        if ($user->hasRoles(['admin'])) {
+        if ($user->hasRoles([Role::ADMIN])) {
             return true;
         }
     }

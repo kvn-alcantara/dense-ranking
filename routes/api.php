@@ -18,7 +18,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::apiResource('games', GameController::class);
 
-Route::apiResource('scores', ScoreController::class)->except(['update']);
+Route::apiResource('games.scores', ScoreController::class)->shallow();
 
 Route::controller(AuthController::class)->group(function () {
     Route::post('login', 'login')->name('login');

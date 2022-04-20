@@ -23,8 +23,8 @@ class GameTest extends TestCase
             '*' => [
                 'position',
                 'value',
-                'user' => [
-                    'id',
+                'player' => [
+                    'user_id',
                     'name',
                 ],
                 'created_at',
@@ -32,11 +32,34 @@ class GameTest extends TestCase
         ],
     ];
 
-    public function test_it_gets_games()
+    public function test_it_gets_games_as_a_player()
     {
         $this->signIn();
 
-        Game::factory()->count(5)->create();
+        Game::factory()->count(2)->create();
+
+        $response = $this->getJson(route('games.index'));
+
+        $response
+            ->assertOk()
+            ->assertJsonStructure([
+                'data' => [
+                    '*' => [
+                        'id',
+                        'name',
+                        '_links' => [],
+                    ],
+                ],
+            ]);
+    }
+
+    public function test_it_gets_games_as_a_admin()
+    {
+        $admin = User::factory()->has(Role::factory()->admin())->create();
+
+        $this->signIn($admin);
+
+        Game::factory()->count(2)->create();
 
         $response = $this->getJson(route('games.index'));
 
@@ -67,7 +90,7 @@ class GameTest extends TestCase
             ->has(Score::factory()->for($user)->count(15))
             ->create();
 
-        $response = $this->getJson(route('games.show', $game))->dump();
+        $response = $this->getJson(route('games.show', $game));
 
         $response
             ->assertOk()
@@ -147,7 +170,7 @@ class GameTest extends TestCase
             ]
         ];
 
-        $response = $this->postJson(route('games.store'), $data)->dump();
+        $response = $this->postJson(route('games.store'), $data);
 
         $response
             ->assertInvalid(['scores.0.value', 'scores.0.user_id'])
@@ -197,7 +220,7 @@ class GameTest extends TestCase
             ],
         ];
 
-        $response = $this->putJson(route('games.update', $game), $data)->dump();
+        $response = $this->putJson(route('games.update', $game), $data);
 
         $response
             ->assertInvalid(['name'])

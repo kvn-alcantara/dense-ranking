@@ -2,7 +2,7 @@
 
 namespace App\Listeners;
 
-use App\Events\ScoreCreated;
+use App\Events\ScoreModified;
 use App\Models\Score;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
@@ -22,10 +22,10 @@ class AdjustGameRanking
     /**
      * Handle the event.
      *
-     * @param ScoreCreated $event
+     * @param ScoreModified $event
      * @return void
      */
-    public function handle(ScoreCreated $event)
+    public function handle(ScoreModified $event)
     {
         // Get the existing score with a value higher or equal than the new one
         $existingScore = Score::where('game_id', $event->score->game_id)

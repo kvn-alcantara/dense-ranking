@@ -11,7 +11,7 @@ class RoleFactory extends Factory
      *
      * @return array
      */
-    public function definition()
+    public function definition(): array
     {
         return [
             'name' => $this->faker->randomElement(['player', 'admin']),
@@ -21,9 +21,9 @@ class RoleFactory extends Factory
     /**
      * Indicate that the user is a player.
      *
-     * @return \Illuminate\Database\Eloquent\Factories\Factory
+     * @return Factory
      */
-    public function player()
+    public function player(): Factory
     {
         return $this->state(function (array $attributes) {
             return [
@@ -35,9 +35,9 @@ class RoleFactory extends Factory
     /**
      * Indicate that the user is a admin.
      *
-     * @return \Illuminate\Database\Eloquent\Factories\Factory
+     * @return Factory
      */
-    public function admin()
+    public function admin(): Factory
     {
         return $this->state(function (array $attributes) {
             return [

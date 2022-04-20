@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Models\Role;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -16,21 +17,28 @@ class ScoreResource extends JsonResource
     public function toArray($request): array
     {
         return [
-            'id',
-            'user' => [
-                'id' => $this->user->id,
+            'id' => $this->id,
+            'position' => $this->position,
+            'value' => $this->value,
+            'player' => [
+                'user_id' => $this->user->id,
                 'name' => $this->user->name,
             ],
-            'value' => $this->value,
-            'position' => $this->position,
             'created_at' => $this->created_at->format('d/m/Y H:i:s'),
             '_links' => [
-                $this->mergeWhen(auth()->id() === $this->user_id, [
+                [
+                    'href' => route('scores.show', $this),
+                    'rel' => 'show',
+                    'type' => 'GET',
+                ],
+                $this->mergeWhen(auth()->user()->hasRoles([Role::ADMIN]), [
                     [
-                        'href' => route('scores.show', $this),
-                        'rel' => 'show',
-                        'type' => 'GET',
+                        'href' => route('scores.update', $this),
+                        'rel' => 'update',
+                        'type' => 'PUT',
                     ],
+                ]),
+                $this->mergeWhen(auth()->id() == $this->user_id, [
                     [
                         'href' => route('scores.destroy', $this),
                         'rel' => 'destroy',
